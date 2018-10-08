@@ -1,15 +1,16 @@
 package com.bockig.checkout;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
-class DiscountOnAmount implements Rule {
+class SeveralPiecesPricingRule implements PricingRule {
 
     private final Item item;
     private final Integer amount;
     private final Integer fixedTotal;
 
-    DiscountOnAmount(Item item, Integer amount, Integer fixedTotal) {
+    SeveralPiecesPricingRule(Item item, Integer amount, Integer fixedTotal) {
         this.item = item;
         this.amount = amount;
         this.fixedTotal = fixedTotal;
@@ -20,22 +21,24 @@ class DiscountOnAmount implements Rule {
         return fixedTotal;
     }
 
-    @Override
-    public boolean canBeApplied(TotalContainer total) {
+    private boolean canBeAppliedTo(ItemsWithPricingRules total) {
         return allRelevantItems(total).size() >= amount;
     }
 
-    private List<Item> allRelevantItems(TotalContainer total) {
+    private List<Item> allRelevantItems(ItemsWithPricingRules total) {
         return total.getSingleItems()
                 .stream()
                 .filter(this::isItem).collect(Collectors.toList());
     }
 
     @Override
-    public TotalContainer applyTo(TotalContainer total) {
+    public Optional<ItemsWithPricingRules> applyTo(ItemsWithPricingRules total) {
+        if (!canBeAppliedTo(total)) {
+            return Optional.empty();
+        }
         List<Item> itemsForDiscount = allRelevantItems(total).subList(0, amount);
-        RuleApplied appliedRule = new RuleApplied(itemsForDiscount, this);
-        return total.with(appliedRule, itemsForDiscount);
+        AppliedPricingRule appliedRule = new AppliedPricingRule(itemsForDiscount, this);
+        return Optional.of(total.with(appliedRule));
     }
 
     private boolean isItem(Item item) {

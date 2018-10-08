@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-
 class Checkout {
 
     private final Rules rules;
@@ -15,14 +14,15 @@ class Checkout {
     }
 
     Integer total() {
-        TotalContainer total = TotalContainer.create(items);
-        Optional<TotalContainer> withRuleApplied;
+        ItemsWithPricingRules total = ItemsWithPricingRules.create(items);
+        Optional<ItemsWithPricingRules> afterRuleWasApplied;
         do {
-            withRuleApplied = rules.apply(total);
-            if (withRuleApplied.isPresent()) {
-                total = withRuleApplied.get();
+            afterRuleWasApplied = rules.apply(total);
+            if (afterRuleWasApplied.isPresent()) {
+                total = afterRuleWasApplied.get();
             }
-        } while (withRuleApplied.isPresent());
+        } while (afterRuleWasApplied.isPresent());
+
         return total.getTotal();
     }
 

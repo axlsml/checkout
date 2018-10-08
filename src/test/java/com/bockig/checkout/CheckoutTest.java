@@ -14,8 +14,9 @@ public class CheckoutTest {
     private Item d = new Item("D", 15);
 
     Rules rules = RulesBuilder.create()
-            .add(new DiscountOnAmount(a, 3, 130))
-            .add(new DiscountOnAmount(b, 2, 45))
+            .add(new SeveralPiecesPricingRule(a, 7, 300)) // should be given priority of 2 times applying 3xa
+            .add(new SeveralPiecesPricingRule(a, 3, 130))
+            .add(new SeveralPiecesPricingRule(b, 2, 45))
             .build();
 
     Integer price(List<Item> items) {
@@ -36,6 +37,7 @@ public class CheckoutTest {
         Assert.assertEquals(Integer.valueOf(180), price(Lists.newArrayList(a, a, a, a)));
         Assert.assertEquals(Integer.valueOf(230), price(Lists.newArrayList(a, a, a, a, a)));
         Assert.assertEquals(Integer.valueOf(260), price(Lists.newArrayList(a, a, a, a, a, a)));
+        Assert.assertEquals(Integer.valueOf(300), price(Lists.newArrayList(a, a, a, a, a, a, a)));
 
         Assert.assertEquals(Integer.valueOf(160), price(Lists.newArrayList(a, a, a, b)));
         Assert.assertEquals(Integer.valueOf(175), price(Lists.newArrayList(a, a, a, b, b)));

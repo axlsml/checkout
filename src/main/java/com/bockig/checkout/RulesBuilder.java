@@ -6,23 +6,23 @@ import java.util.Set;
 
 class RulesBuilder {
 
-    private Set<Rule> rules;
+    private Set<PricingRule> pricingRules;
 
-    private RulesBuilder(Set<Rule> rules) {
-        this.rules = rules;
+    private RulesBuilder(Set<PricingRule> pricingRules) {
+        this.pricingRules = pricingRules;
     }
 
     static RulesBuilder create() {
         return new RulesBuilder(Sets.newHashSet());
     }
 
-    RulesBuilder add(Rule rule) {
-        Set<Rule> newRules = Sets.newConcurrentHashSet(rules);
-        newRules.add(rule);
-        return new RulesBuilder(newRules);
+    RulesBuilder add(PricingRule pricingRule) {
+        Set<PricingRule> newPricingRules = Sets.newConcurrentHashSet(pricingRules);
+        newPricingRules.add(pricingRule);
+        return new RulesBuilder(newPricingRules);
     }
 
     Rules build() {
-        return new Rules(rules);
+        return new Rules(pricingRules);
     }
 }
