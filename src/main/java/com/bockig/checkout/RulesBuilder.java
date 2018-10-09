@@ -16,7 +16,7 @@ class RulesBuilder {
         return new RulesBuilder(Sets.newHashSet());
     }
 
-    RulesBuilder add(PricingRule pricingRule) {
+    RulesBuilder with(PricingRule pricingRule) {
         Set<PricingRule> newPricingRules = Sets.newConcurrentHashSet(pricingRules);
         newPricingRules.add(pricingRule);
         return new RulesBuilder(newPricingRules);

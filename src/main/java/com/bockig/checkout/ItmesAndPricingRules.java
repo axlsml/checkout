@@ -4,18 +4,18 @@ import com.google.common.collect.Lists;
 
 import java.util.List;
 
-class ItemsWithPricingRules {
+class ItmesAndPricingRules {
 
     private final List<Item> singleItems;
     private final List<AppliedPricingRule> itemsWithAppliedPricingRule;
 
-    private ItemsWithPricingRules(List<Item> singleItems, List<AppliedPricingRule> itemsWithAppliedPricingRule) {
+    private ItmesAndPricingRules(List<Item> singleItems, List<AppliedPricingRule> itemsWithAppliedPricingRule) {
         this.singleItems = singleItems;
         this.itemsWithAppliedPricingRule = itemsWithAppliedPricingRule;
     }
 
-    static ItemsWithPricingRules create(List<Item> items) {
-        return new ItemsWithPricingRules(items, Lists.newArrayList());
+    static ItmesAndPricingRules create(List<Item> items) {
+        return new ItmesAndPricingRules(items, Lists.newArrayList());
     }
 
     Integer getTotal() {
@@ -28,13 +28,13 @@ class ItemsWithPricingRules {
         return singleItems;
     }
 
-    ItemsWithPricingRules with(AppliedPricingRule appliedRule) {
+    ItmesAndPricingRules with(AppliedPricingRule appliedRule) {
         List<Item> leftSingleItems = appliedRule.withoutIncludedItems(singleItems);
-        List<AppliedPricingRule> addedDiscounts = appliedRule.addTo(itemsWithAppliedPricingRule);
-        return new ItemsWithPricingRules(leftSingleItems, addedDiscounts);
+        List<AppliedPricingRule> addedDiscounts = appliedRule.plus(itemsWithAppliedPricingRule);
+        return new ItmesAndPricingRules(leftSingleItems, addedDiscounts);
     }
 
-    int compareByTotal(ItemsWithPricingRules other) {
+    int compareByTotal(ItmesAndPricingRules other) {
         return getTotal().compareTo(other.getTotal());
     }
 }

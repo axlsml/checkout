@@ -6,12 +6,12 @@ import java.util.List;
 
 class AppliedPricingRule {
 
-    private final List<Item> itemsIncluded;
     private final PricingRule pricingRule;
+    private final List<Item> itemsIncluded;
 
-    AppliedPricingRule(List<Item> itemsIncluded, PricingRule pricingRule) {
-        this.itemsIncluded = itemsIncluded;
+    AppliedPricingRule(PricingRule pricingRule, List<Item> itemsIncluded) {
         this.pricingRule = pricingRule;
+        this.itemsIncluded = itemsIncluded;
     }
 
     int getPrice() {
@@ -24,7 +24,7 @@ class AppliedPricingRule {
         return left;
     }
 
-    List<AppliedPricingRule> addTo(List<AppliedPricingRule> appliedPricingRules) {
+    List<AppliedPricingRule> plus(List<AppliedPricingRule> appliedPricingRules) {
         List<AppliedPricingRule> withThis = Lists.newArrayList(appliedPricingRules);
         withThis.add(this);
         return withThis;
