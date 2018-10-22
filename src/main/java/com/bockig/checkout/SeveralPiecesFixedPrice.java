@@ -22,27 +22,27 @@ class SeveralPiecesFixedPrice implements PricingRule {
     }
 
     @Override
-    public Optional<ItmesAndPricingRules> applyTo(ItmesAndPricingRules total) {
-        if (!canBeAppliedTo(total)) {
+    public Optional<PricesContainer> applyTo(PricesContainer container) {
+        if (!canBeAppliedTo(container)) {
             return Optional.empty();
         }
-        List<Item> pickedItems = relevantItems(total).subList(0, amount);
+        List<HasPrice> pickedItems = relevantItems(container).subList(0, amount);
         AppliedPricingRule appliedRule = new AppliedPricingRule(this, pickedItems);
-        return Optional.of(total.with(appliedRule));
+        return Optional.of(container.with(appliedRule));
     }
 
-    private boolean canBeAppliedTo(ItmesAndPricingRules items) {
+    private boolean canBeAppliedTo(PricesContainer items) {
         return relevantItems(items).size() >= amount;
     }
 
-    private List<Item> relevantItems(ItmesAndPricingRules items) {
-        return items.getSingleItems()
+    private List<HasPrice> relevantItems(PricesContainer container) {
+        return container.getItemsWithPrice()
                 .stream()
                 .filter(this::equalsThisItem)
                 .collect(Collectors.toList());
     }
 
-    private boolean equalsThisItem(Item item) {
-        return item.equals(this.item);
+    private boolean equalsThisItem(HasPrice hasPrice) {
+        return hasPrice.equals(this.item);
     }
 }

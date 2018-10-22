@@ -2,7 +2,7 @@ package com.bockig.checkout;
 
 import java.util.Objects;
 
-class Item {
+class Item implements HasPrice {
 
     private String name;
     private Integer unitPrice;
@@ -25,7 +25,9 @@ class Item {
         return Objects.hash(name);
     }
 
-    Integer getUnitPrice() {
+    @Override
+    public Integer getPrice() {
         return unitPrice;
     }
+
 }

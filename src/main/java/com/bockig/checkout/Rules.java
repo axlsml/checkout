@@ -13,10 +13,10 @@ class Rules {
         this.pricingRuleSet = pricingRuleSet;
     }
 
-    ItmesAndPricingRules applyTo(List<Item> items) {
-        ItmesAndPricingRules itemsAndPricingRules = ItmesAndPricingRules.create(items);
+    PricesContainer applyTo(List<Item> items) {
+        PricesContainer itemsAndPricingRules = new PricesContainer(items);
 
-        Optional<ItmesAndPricingRules> optimized;
+        Optional<PricesContainer> optimized;
         while ((optimized = applyBestRule(itemsAndPricingRules)).isPresent()) {
             itemsAndPricingRules = optimized.get();
         }
@@ -31,12 +31,12 @@ class Rules {
      * @param items container of items with and without pricing rules applied
      * @return Optional.empty() if no rule could be applied, otherwise an Optional.of() with the new items container
      */
-    private Optional<ItmesAndPricingRules> applyBestRule(ItmesAndPricingRules items) {
-        Function<PricingRule, Optional<ItmesAndPricingRules>> tryToApplyRule = rule -> rule.applyTo(items);
+    private Optional<PricesContainer> applyBestRule(PricesContainer items) {
+        Function<PricingRule, Optional<PricesContainer>> tryToApplyRule = rule -> rule.applyTo(items);
         return pricingRuleSet.stream()
                 .map(tryToApplyRule)
                 .filter(Optional::isPresent)
                 .map(Optional::get)
-                .min(ItmesAndPricingRules::compareByTotal);
+                .min(PricesContainer::compareByTotal);
     }
 }

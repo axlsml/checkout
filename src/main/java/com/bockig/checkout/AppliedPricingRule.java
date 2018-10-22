@@ -1,32 +1,23 @@
 package com.bockig.checkout;
 
-import com.google.common.collect.Lists;
-
 import java.util.List;
 
-class AppliedPricingRule {
+class AppliedPricingRule implements HasPrice {
 
     private final PricingRule pricingRule;
-    private final List<Item> itemsIncluded;
+    private final List<HasPrice> included;
 
-    AppliedPricingRule(PricingRule pricingRule, List<Item> itemsIncluded) {
+    AppliedPricingRule(PricingRule pricingRule, List<HasPrice> included) {
         this.pricingRule = pricingRule;
-        this.itemsIncluded = itemsIncluded;
+        this.included = included;
     }
 
-    int getPrice() {
+    @Override
+    public Integer getPrice() {
         return pricingRule.getPrice();
     }
 
-    List<Item> withoutIncludedItems(List<Item> items) {
-        List<Item> left = Lists.newArrayList(items);
-        itemsIncluded.forEach(left::remove);
-        return left;
-    }
-
-    List<AppliedPricingRule> plus(List<AppliedPricingRule> appliedPricingRules) {
-        List<AppliedPricingRule> withThis = Lists.newArrayList(appliedPricingRules);
-        withThis.add(this);
-        return withThis;
+    List<HasPrice> getIncluded() {
+        return included;
     }
 }
