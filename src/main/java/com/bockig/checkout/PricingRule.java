@@ -10,5 +10,5 @@ interface PricingRule extends HasPrice {
      * @param total the current container of items and already applied rules
      * @return Optional.empty() if this rule could not be applied, otherwise Optional.of() with this rule added
      */
-    Optional<PricesContainer> applyTo(PricesContainer total);
+    Optional<PricesContainer> optimize(PricesContainer total);
 }

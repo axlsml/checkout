@@ -5,9 +5,9 @@ import java.util.List;
 class AppliedPricingRule implements HasPrice {
 
     private final PricingRule pricingRule;
-    private final List<HasPrice> included;
+    private final List<Item> included;
 
-    AppliedPricingRule(PricingRule pricingRule, List<HasPrice> included) {
+    AppliedPricingRule(PricingRule pricingRule, List<Item> included) {
         this.pricingRule = pricingRule;
         this.included = included;
     }
@@ -17,7 +17,7 @@ class AppliedPricingRule implements HasPrice {
         return pricingRule.getPrice();
     }
 
-    List<HasPrice> getIncluded() {
+    List<Item> getIncluded() {
         return included;
     }
 }

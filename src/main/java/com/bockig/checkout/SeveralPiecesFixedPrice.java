@@ -22,11 +22,11 @@ class SeveralPiecesFixedPrice implements PricingRule {
     }
 
     @Override
-    public Optional<PricesContainer> applyTo(PricesContainer container) {
+    public Optional<PricesContainer> optimize(PricesContainer container) {
         if (!canBeAppliedTo(container)) {
             return Optional.empty();
         }
-        List<HasPrice> pickedItems = relevantItems(container).subList(0, amount);
+        List<Item> pickedItems = relevantItems(container).subList(0, amount);
         AppliedPricingRule appliedRule = new AppliedPricingRule(this, pickedItems);
         return Optional.of(container.with(appliedRule));
     }
@@ -35,9 +35,11 @@ class SeveralPiecesFixedPrice implements PricingRule {
         return relevantItems(items).size() >= amount;
     }
 
-    private List<HasPrice> relevantItems(PricesContainer container) {
-        return container.getItemsWithPrice()
+    private List<Item> relevantItems(PricesContainer container) {
+        return container.getThingsWithPrice()
                 .stream()
+                .filter(hasPrice -> hasPrice instanceof Item)
+                .map(hasPrice -> (Item) hasPrice)
                 .filter(this::equalsThisItem)
                 .collect(Collectors.toList());
     }

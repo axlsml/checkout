@@ -13,15 +13,15 @@ class Rules {
         this.pricingRuleSet = pricingRuleSet;
     }
 
-    PricesContainer applyTo(List<Item> items) {
-        PricesContainer itemsAndPricingRules = new PricesContainer(items);
+    PricesContainer createContainer(List<Item> items) {
+        PricesContainer container = new PricesContainer(items);
 
         Optional<PricesContainer> optimized;
-        while ((optimized = applyBestRule(itemsAndPricingRules)).isPresent()) {
-            itemsAndPricingRules = optimized.get();
+        while ((optimized = applyBestRule(container)).isPresent()) {
+            container = optimized.get();
         }
 
-        return itemsAndPricingRules;
+        return container;
     }
 
     /**
@@ -32,7 +32,7 @@ class Rules {
      * @return Optional.empty() if no rule could be applied, otherwise an Optional.of() with the new items container
      */
     private Optional<PricesContainer> applyBestRule(PricesContainer items) {
-        Function<PricingRule, Optional<PricesContainer>> tryToApplyRule = rule -> rule.applyTo(items);
+        Function<PricingRule, Optional<PricesContainer>> tryToApplyRule = rule -> rule.optimize(items);
         return pricingRuleSet.stream()
                 .map(tryToApplyRule)
                 .filter(Optional::isPresent)
