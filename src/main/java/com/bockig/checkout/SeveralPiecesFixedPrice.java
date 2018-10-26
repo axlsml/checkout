@@ -11,6 +11,12 @@ class SeveralPiecesFixedPrice implements PricingRule {
     private final Integer fixedTotal;
 
     SeveralPiecesFixedPrice(Item item, Integer amount, Integer fixedTotal) {
+        if (amount <= 0) {
+            throw new IllegalArgumentException("invalid amount: " + amount);
+        }
+        if (fixedTotal < 0) {
+            throw new IllegalArgumentException("invalid total: " + fixedTotal);
+        }
         this.item = item;
         this.amount = amount;
         this.fixedTotal = fixedTotal;
@@ -31,17 +37,17 @@ class SeveralPiecesFixedPrice implements PricingRule {
         return Optional.of(container.with(appliedRule));
     }
 
-    private boolean canBeAppliedTo(PricesContainer items) {
+    boolean canBeAppliedTo(PricesContainer items) {
         return relevantItems(items).size() >= amount;
     }
 
     private List<Item> relevantItems(PricesContainer container) {
-        return container.getThingsWithPrice()
+        List<Item> collect = container.getThingsWithPrice()
                 .stream()
-                .filter(hasPrice -> hasPrice instanceof Item)
-                .map(hasPrice -> (Item) hasPrice)
                 .filter(this::equalsThisItem)
+                .map(hasPrice -> (Item) hasPrice)
                 .collect(Collectors.toList());
+        return collect;
     }
 
     private boolean equalsThisItem(HasPrice hasPrice) {

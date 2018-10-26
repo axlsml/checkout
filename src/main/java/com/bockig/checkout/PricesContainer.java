@@ -2,13 +2,14 @@ package com.bockig.checkout;
 
 import com.google.common.collect.Lists;
 
+import java.util.Collection;
 import java.util.List;
 
 class PricesContainer {
 
-    private final List<? extends HasPrice> thingsWithPrice;
+    private final Collection<? extends HasPrice> thingsWithPrice;
 
-    PricesContainer(List<? extends HasPrice> thingsWithPrice) {
+    PricesContainer(Collection<? extends HasPrice> thingsWithPrice) {
         this.thingsWithPrice = thingsWithPrice;
     }
 
@@ -20,7 +21,7 @@ class PricesContainer {
         return getTotal().compareTo(other.getTotal());
     }
 
-    public List<? extends HasPrice> getThingsWithPrice() {
+    public Collection<? extends HasPrice> getThingsWithPrice() {
         return thingsWithPrice;
     }
 
